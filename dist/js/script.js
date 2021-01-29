@@ -128,6 +128,7 @@ window.addEventListener('DOMContentLoaded', function() {
     modalCloseBtn.addEventListener('click', closeModal);
 
 
+    // modaldan bawqa neye bassam close olacaq
     modal.addEventListener('click', (e)=>{
         if(e.target === modal){
            closeModal();
@@ -140,7 +141,7 @@ window.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    const modelTimerId = setTimeout(openModal, 3000);
+    // const modelTimerId = setTimeout(openModal, 3000);
 
 
     function showModalBySCroll(){
@@ -152,9 +153,77 @@ window.addEventListener('DOMContentLoaded', function() {
 
     // if user scroll to the end show modal
     window.addEventListener('scroll', showModalBySCroll);
+
+
+    //Using classes for cards
+
+    class MenuCard {
+        constructor(src, alt, title, descr, price, parentSelector){
+            this.src = src;
+            this.alt = alt;
+            this.title = title;
+            this.descr = descr;
+            this.price = price;
+            this.parent = document.querySelector(parentSelector);
+            this.transfer = 1.7;
+            this.changeToAZN();
+        }
+
+        changeToAZN(){
+            this.price = this.price * this.transfer;
+        }
+
+        render(){
+            const element = document.createElement('div');
+            element.innerHTML = `
+                <div class="menu__item">
+                    <img src=${this.src} alt=${this.alt}>
+                    <h3 class="menu__item-subtitle">${this.title}</h3>
+                    <div class="menu__item-descr">${this.descr}</div>
+                    <div class="menu__item-divider"></div>
+                    <div class="menu__item-price">
+                        <div class="menu__item-cost">Qiymət:</div>
+                        <div class="menu__item-total"><span>${this.price}</span> azn/gündəlik</div>
+                    </div>
+                </div>
+            `;
+
+            this.parent.append(element);
+        }
+    }
+
+    // first solution for rendering
+    // const div = new MenuCard();
+    // div.render();
+
+    // second solution
+    new MenuCard(
+        "img/tabs/vegy.jpg", 
+        "vegy", 
+        "'Fitness' menyusu", 
+        "Fitness menyusu - yemək bişirməyə yeni bir yanaşmadır: daha çox təzə tərəvəz və meyvələr. Aktiv və sağlam insanların məhsulu. Bu, optimal qiymətə və yüksək keyfiyyətə malik tamamilə yeni bir məhsuldur!",
+         15,
+        '.menu .container'
+    ).render();
+
+        new MenuCard(
+        "img/tabs/elite.jpg", 
+        "title", 
+        "'Premium' menyu", 
+        "'Premium' menyuda - yalnız gözəl qablaşdırma dizaynından deyil, həm də qabların yüksək keyfiyyətli icrasından istifadə edirik. Qırmızı balıq, dəniz məhsulları, meyvələr - restorana getmədən restoran menyusu!",
+         32,
+        '.menu .container'
+    ).render();
+
+    new MenuCard(
+        "img/tabs/post.jpg", 
+        "post", 
+        "'Arıq' menyu", 
+        "'Arıq' menyu - maddələrin diqqətlə seçilməsidir: heyvan məhsullarının, badem, yulaf, hindistan cevizi və ya qarabaşaq yarması olan südün, tofu və idxal olunan vegetarian bifteklərinə görə lazımlı miqdarda zülal.",
+         44,
+        '.menu .container'
+    ).render();
+
 });
-
-
-
 
 
