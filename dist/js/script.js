@@ -100,7 +100,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
     // Modal
 
-    const modalTrigger = document.querySelector('[data-modal]'),
+    const modalTrigger = document.querySelectorAll('[data-modal]'),
           modal = document.querySelector('.modal'),
           modalCloseBtn = document.querySelector('[data-close]');
 
@@ -108,7 +108,7 @@ window.addEventListener('DOMContentLoaded', function() {
         modal.classList.add('show');
         modal.classList.remove('hide');
         document.body.style.overflow = 'hidden';
-        clearInterval(modelTimerId);
+        // clearInterval(modelTimerId);
     }
 
 
@@ -156,74 +156,73 @@ window.addEventListener('DOMContentLoaded', function() {
 
 
     //Using classes for cards
-
     class MenuCard {
-        constructor(src, alt, title, descr, price, parentSelector){
+        constructor(src, alt, title, descr, price, parentSelector, ...classes) {
             this.src = src;
             this.alt = alt;
             this.title = title;
             this.descr = descr;
             this.price = price;
+            this.classes = classes;
             this.parent = document.querySelector(parentSelector);
             this.transfer = 1.7;
-            this.changeToAZN();
+            this.changeToUAH(); 
         }
 
-        changeToAZN(){
-            this.price = this.price * this.transfer;
+        changeToUAH() {
+            this.price = Math.round(this.price * this.transfer); 
         }
 
-        render(){
+        render() {
             const element = document.createElement('div');
+
+            // If we dont put any classes please put default class
+            if (this.classes.length === 0) {
+                this.classes = "menu__item";
+                element.classList.add(this.classes);
+            } else {
+                this.classes.forEach(className => element.classList.add(className));
+            }
+
             element.innerHTML = `
-                <div class="menu__item">
-                    <img src=${this.src} alt=${this.alt}>
-                    <h3 class="menu__item-subtitle">${this.title}</h3>
-                    <div class="menu__item-descr">${this.descr}</div>
-                    <div class="menu__item-divider"></div>
-                    <div class="menu__item-price">
-                        <div class="menu__item-cost">Qiymət:</div>
-                        <div class="menu__item-total"><span>${this.price}</span> azn/gündəlik</div>
-                    </div>
+                <img src=${this.src} alt=${this.alt}>
+                <h3 class="menu__item-subtitle">${this.title}</h3>
+                <div class="menu__item-descr">${this.descr}</div>
+                <div class="menu__item-divider"></div>
+                <div class="menu__item-price">
+                    <div class="menu__item-cost">Цена:</div>
+                    <div class="menu__item-total"><span>${this.price}</span> azn/gün</div>
                 </div>
             `;
-
             this.parent.append(element);
         }
     }
 
-    // first solution for rendering
-    // const div = new MenuCard();
-    // div.render();
-
-    // second solution
     new MenuCard(
-        "img/tabs/vegy.jpg", 
-        "vegy", 
-        "'Fitness' menyusu", 
-        "Fitness menyusu - yemək bişirməyə yeni bir yanaşmadır: daha çox təzə tərəvəz və meyvələr. Aktiv və sağlam insanların məhsulu. Bu, optimal qiymətə və yüksək keyfiyyətə malik tamamilə yeni bir məhsuldur!",
-         15,
-        '.menu .container'
-    ).render();
-
-        new MenuCard(
-        "img/tabs/elite.jpg", 
-        "title", 
-        "'Premium' menyu", 
-        "'Premium' menyuda - yalnız gözəl qablaşdırma dizaynından deyil, həm də qabların yüksək keyfiyyətli icrasından istifadə edirik. Qırmızı balıq, dəniz məhsulları, meyvələr - restorana getmədən restoran menyusu!",
-         32,
-        '.menu .container'
+        "img/tabs/vegy.jpg",
+        "vegy",
+        '"Fitness" menyusu',
+        '"Fitness" menyusu - yemək bişirməyə yeni bir yanaşmadır: daha çox təzə tərəvəz və meyvələr. Aktiv və sağlam insanların məhsulu. Bu, optimal qiymətə və yüksək keyfiyyətə malik tamamilə yeni bir məhsuldur!',
+        12,
+        ".menu .container"
     ).render();
 
     new MenuCard(
-        "img/tabs/post.jpg", 
-        "post", 
-        "'Arıq' menyu", 
-        "'Arıq' menyu - maddələrin diqqətlə seçilməsidir: heyvan məhsullarının, badem, yulaf, hindistan cevizi və ya qarabaşaq yarması olan südün, tofu və idxal olunan vegetarian bifteklərinə görə lazımlı miqdarda zülal.",
-         44,
-        '.menu .container'
+        "img/tabs/post.jpg",
+        "post",
+        '"Arıq" menyu',
+        '"Arıq" menyu - maddələrin diqqətlə seçilməsidir: heyvan məhsullarının, badem, yulaf, hindistan cevizi və ya qarabaşaq yarması olan südün, tofu və idxal olunan vegetarian bifteklərinə görə lazımlı miqdarda zülal.',
+        20,
+        ".menu .container"
+    ).render();
+
+    new MenuCard(
+        "img/tabs/elite.jpg",
+        "elite",
+        '"Premium" menyu',
+        '"Premium" menyuda - yalnız gözəl qablaşdırma dizaynından deyil, həm də qabların yüksək keyfiyyətli icrasından istifadə edirik. Qırmızı balıq, dəniz məhsulları, meyvələr - restorana getmədən restoran menyusu!',
+        28,
+        ".menu .container"
     ).render();
 
 });
-
-
