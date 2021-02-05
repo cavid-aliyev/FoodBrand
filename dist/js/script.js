@@ -248,33 +248,32 @@ window.addEventListener('DOMContentLoaded', function() {
             `;
             form.insertAdjacentElement('afterend', statusMessage);
 
-            const request = new XMLHttpRequest();
-            request.open('POST', 'server.php');
-            request.setRequestHeader('Content-type', 'application/json');
-
             const formData = new FormData(form);
 
-            const object = {};
-            formData.forEach(function(value, key){
+            const object ={};
+            formData.forEach((value, key) =>{
                 object[key] = value;
             });
 
-            const json = JSON.stringify(object);
+            // Sending datas 
+            fetch('server.php', {
+                method: "POST",
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(object) 
 
-            request.send(json);
-
-            request.addEventListener('load', ()=>{
-                if (request.status === 200){
-                    console.log(request.response);
-                    showThanksModal(message.success);
-                    //When message showed please delete this stuff and forms info
-                    form.reset();
-                    setTimeout(() => {
-                        statusMessage.remove();
-                    }, 2000);
-                }else{
-                    showThanksModal(message.failure);
-                }
+            }).then(data => data.text())
+            .then(data => {
+                console.log(data);
+                showThanksModal(message.success);
+                statusMessage.remove();
+            })
+            .catch(data =>{
+                showThanksModal(message.failure);
+            })
+            .finally(data => {
+                form.reset();
             });
         });
     }
@@ -303,11 +302,6 @@ window.addEventListener('DOMContentLoaded', function() {
             closeModal();
         }, 4000);
     }
-
-
-
-
-
 
 
 
