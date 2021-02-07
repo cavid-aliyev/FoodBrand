@@ -187,7 +187,7 @@ window.addEventListener('DOMContentLoaded', function() {
                 <div class="menu__item-descr">${this.descr}</div>
                 <div class="menu__item-divider"></div>
                 <div class="menu__item-price">
-                    <div class="menu__item-cost">Цена:</div>
+                    <div class="menu__item-cost">Qiymet:</div>
                     <div class="menu__item-total"><span>${this.price}</span> azn/gün</div>
                 </div>
             `;
@@ -195,32 +195,57 @@ window.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    new MenuCard(
-        "img/tabs/vegy.jpg",
-        "vegy",
-        '"Fitness" menyusu',
-        '"Fitness" menyusu - yemək bişirməyə yeni bir yanaşmadır: daha çox təzə tərəvəz və meyvələr. Aktiv və sağlam insanların məhsulu. Bu, optimal qiymətə və yüksək keyfiyyətə malik tamamilə yeni bir məhsuldur!',
-        12,
-        ".menu .container"
-    ).render();
+        //Function for putting datas from db
+        const getResource = async (url) => {
+            const res = await fetch(url);
 
-    new MenuCard(
-        "img/tabs/post.jpg",
-        "post",
-        '"Arıq" menyu',
-        '"Arıq" menyu - maddələrin diqqətlə seçilməsidir: heyvan məhsullarının, badem, yulaf, hindistan cevizi və ya qarabaşaq yarması olan südün, tofu və idxal olunan vegetarian bifteklərinə görə lazımlı miqdarda zülal.',
-        20,
-        ".menu .container"
-    ).render();
+            //Fetch cant catch http server errors(404,500) and for solving this problem we use ok and status methods.
+            if(!res.ok){
+                throw new Error(`Could not fetch ${url}, status: ${res.status}`);
+            }else{
+                //Conver to normal js object
+                return await res.json();
+            }
+        };
 
-    new MenuCard(
-        "img/tabs/elite.jpg",
-        "elite",
-        '"Premium" menyu',
-        '"Premium" menyuda - yalnız gözəl qablaşdırma dizaynından deyil, həm də qabların yüksək keyfiyyətli icrasından istifadə edirik. Qırmızı balıq, dəniz məhsulları, meyvələr - restorana getmədən restoran menyusu!',
-        28,
-        ".menu .container"
-    ).render();
+        getResource('http://localhost:3000/menu')
+               .then(data => {
+                  data.forEach(({img, altimg, title, descr, price}) =>{
+                      new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
+                  });
+               });
+
+
+        //Dicamic creating cards from db.json
+        // getResource('http://localhost:3000/menu')
+        // .then(data =>  createCard(data));
+
+        // function createCard(data){
+        //     data.forEach(({img, altimg, title, descr, price}) =>{
+        //         const element = document.createElement('div');
+                
+        //         element.classList.add('menu__item');
+
+        //         element.innerHTML = `
+        //             <img src=${img} alt=${altimg}>
+        //             <h3 class="menu__item-subtitle">${title}</h3>
+        //             <div class="menu__item-descr">${descr}</div>
+        //             <div class="menu__item-divider"></div>
+        //             <div class="menu__item-price">
+        //                 <div class="menu__item-cost">Qiymet:</div>
+        //                 <div class="menu__item-total"><span>${price}</span> azn/gün</div>
+        //             </div>
+        //         `;
+
+        //         document.querySelector('.menu .container').append(element);
+        //     });
+
+        // }
+
+
+
+
+
 
     // Forms
     const forms = document.querySelectorAll('form');
@@ -231,11 +256,25 @@ window.addEventListener('DOMContentLoaded', function() {
         failure: 'Something went wrong(',
     };
 
+
+    //Function for posting datas
+    const postData = async (url, data) => {
+        const res = await fetch(url, {
+            method: "POST",
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: data
+        });
+
+        return await res.json();
+    };
+
     forms.forEach(item =>{
-        postData(item);
+        bindPostData(item);
     });
 
-    function postData(form){
+    function bindPostData(form){
         form.addEventListener('submit', (e)=>{
             e.preventDefault();
 
@@ -250,20 +289,15 @@ window.addEventListener('DOMContentLoaded', function() {
 
             const formData = new FormData(form);
 
-            const object ={};
-            formData.forEach((value, key) =>{
-                object[key] = value;
-            });
+            //Convert Formdata to json
+            //1) we convert data to massive(entries)
+            //2)we convert massive to obj(ftomEntries)
+            //3)We convert all to json(stringify)
+            const json = JSON.stringify(Object.fromEntries(formData.entries()));
+
 
             // Sending datas 
-            fetch('server.php', {
-                method: "POST",
-                headers: {
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(object) 
-
-            }).then(data => data.text())
+            postData('http://localhost:3000/requests', json)
             .then(data => {
                 console.log(data);
                 showThanksModal(message.success);
@@ -303,9 +337,6 @@ window.addEventListener('DOMContentLoaded', function() {
         }, 4000);
     }
 
-    fetch('http://localhost:3000/menu  ')
-         .then(data => data.json())
-         .then(res => console.log(res));
 });
 
 

@@ -11,7 +11,7 @@
       "img": "img/tabs/post.jpg",
       "altimg": "post",
       "title": "'Arıq' menyu",
-      "descr":"'Arıq' menyu - maddələrin diqqətlə seçilməsidir: heyvan məhsullarının, badem, yulaf, hindistan cevizi və ya qarabaşaq yarması olan südün, tofu və idxal olunan vegetarian bifteklərinə görə lazımlı miqdarda zülal.",
+      "descr": "'Arıq' menyu - maddələrin diqqətlə seçilməsidir: heyvan məhsullarının, badem, yulaf, hindistan cevizi və ya qarabaşaq yarması olan südün, tofu və idxal olunan vegetarian bifteklərinə görə lazımlı miqdarda zülal.",
       "price": 20
     },
     {
@@ -23,6 +23,15 @@
     }
   ],
   "requests": [
-      
+    {
+      "name": "Cavid",
+      "phone": "0515542854",
+      "id": 1
+    },
+    {
+      "name": "Rasad",
+      "phone": "32322",
+      "id": 2
+    }
   ]
 }
