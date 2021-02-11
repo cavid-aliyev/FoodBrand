@@ -1,24 +1,24 @@
-window.addEventListener('DOMContentLoaded', function() {
+window.addEventListener('DOMContentLoaded', function () {
     //Tabs
-    let   tabs = document.querySelectorAll('.tabheader__item'),
-          tabsContent = document.querySelectorAll('.tabcontent'),
-          tabsParent = document.querySelector('.tabheader__items'); //for dinamic adding
+    let tabs = document.querySelectorAll('.tabheader__item'),
+        tabsContent = document.querySelectorAll('.tabcontent'),
+        tabsParent = document.querySelector('.tabheader__items'); //for dinamic adding
 
-    function hideTabContent(){
+    function hideTabContent() {
         // Hide content
-        tabsContent.forEach(item =>{
+        tabsContent.forEach(item => {
             item.classList.add('hide');
             item.classList.remove('show', 'fade');
         });
 
         // hide active
-        tabs.forEach(item =>{
+        tabs.forEach(item => {
             item.classList.remove('tabheader__item_active');
         });
 
     }
 
-    function showTabContent(i = 0){
+    function showTabContent(i = 0) {
         tabsContent[i].classList.add('show', 'fade');
         tabsContent[i].classList.remove('hide');
         tabs[i].classList.add('tabheader__item_active');
@@ -28,12 +28,12 @@ window.addEventListener('DOMContentLoaded', function() {
     showTabContent();
 
 
-    tabsParent.addEventListener('click', (e)=>{
+    tabsParent.addEventListener('click', (e) => {
         const target = e.target;
 
-        if( target && target.classList.contains('tabheader__item')){
-            tabs.forEach((item, i)=>{
-                if(target==item){
+        if (target && target.classList.contains('tabheader__item')) {
+            tabs.forEach((item, i) => {
+                if (target == item) {
                     hideTabContent();
                     showTabContent(i);
                 }
@@ -46,12 +46,12 @@ window.addEventListener('DOMContentLoaded', function() {
 
     const deadLine = '2021-02-25';
 
-    function getTimeRemaining(endtime){
+    function getTimeRemaining(endtime) {
         const t = Date.parse(endtime) - Date.parse(new Date()), //date that we need
-              days = Math.floor(t / (1000 * 60 * 60 * 24)),
-              hours = Math.floor((t / (1000 * 60 * 60) % 24 )),
-              minutes = Math.floor((t / 1000 / 60) % 60),
-              seconds = Math.floor((t / 1000) % 60);
+            days = Math.floor(t / (1000 * 60 * 60 * 24)),
+            hours = Math.floor((t / (1000 * 60 * 60) % 24)),
+            minutes = Math.floor((t / 1000 / 60) % 60),
+            seconds = Math.floor((t / 1000) % 60);
 
         return {
             'total': t,
@@ -63,26 +63,26 @@ window.addEventListener('DOMContentLoaded', function() {
     }
 
 
-    function getZero(num){
-        if (num>=0 && num<10){
+    function getZero(num) {
+        if (num >= 0 && num < 10) {
             return `0${num}`;
-        }else{
+        } else {
             return num;
         }
     }
 
-    function setClock(selector, endtime){
+    function setClock(selector, endtime) {
         const timer = document.querySelector(selector),
-              days = timer.querySelector('#days'),
-              hours = timer.querySelector('#hours'),
-              minutes = timer.querySelector('#minutes'),
-              seconds = timer.querySelector('#seconds'),
-              timeInterval = setInterval(updateClock, 1000); //our function run per second
+            days = timer.querySelector('#days'),
+            hours = timer.querySelector('#hours'),
+            minutes = timer.querySelector('#minutes'),
+            seconds = timer.querySelector('#seconds'),
+            timeInterval = setInterval(updateClock, 1000); //our function run per second
 
         updateClock(); //template bug fixed
 
 
-        function updateClock(){
+        function updateClock() {
             const t = getTimeRemaining(endtime);
 
             days.innerHTML = getZero(t.days);
@@ -90,7 +90,7 @@ window.addEventListener('DOMContentLoaded', function() {
             minutes.innerHTML = getZero(t.minutes);
             seconds.innerHTML = getZero(t.seconds);
 
-            if (t.total <=0){
+            if (t.total <= 0) {
                 clearInterval(timeInterval);
             }
         }
@@ -101,55 +101,47 @@ window.addEventListener('DOMContentLoaded', function() {
     // Modal
 
     const modalTrigger = document.querySelectorAll('[data-modal]'),
-          modal = document.querySelector('.modal');
+        modal = document.querySelector('.modal');
 
-
-    function openModal(){
-        modal.classList.add('show');
-        modal.classList.remove('hide');
-        document.body.style.overflow = 'hidden';
-        // clearInterval(modelTimerId);
-    }
-
-
-    modalTrigger.forEach(btn=>{
+    modalTrigger.forEach(btn => {
         btn.addEventListener('click', openModal);
     });
 
-
-
-    function closeModal(){
-        modal.classList.add('show');
-        modal.classList.remove('hide');
+    function closeModal() {
+        modal.classList.add('hide');
+        modal.classList.remove('show');
         document.body.style.overflow = '';
     }
 
+    function openModal() {
+        modal.classList.add('show');
+        modal.classList.remove('hide');
+        document.body.style.overflow = 'hidden';
+        clearInterval(modalTimerId);
+    }
 
-    // modaldan bawqa neye bassam close olacaq
-    modal.addEventListener('click', (e)=>{
-        if(e.target === modal || e.target.getAttribute('data-close') == ''){
-           closeModal();
-        }
-    });
-
-    document.addEventListener('keydown', (e)=>{
-        if(e.code === "Escape" && modal.classList.contains('show')){
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal || e.target.getAttribute('data-close') == "") {
             closeModal();
         }
     });
 
-    // const modelTimerId = setTimeout(openModal, 3000);
+    document.addEventListener('keydown', (e) => {
+        if (e.code === "Escape" && modal.classList.contains('show')) {
+            closeModal();
+        }
+    });
 
+    const modalTimerId = setTimeout(openModal, 300000);
+    // Изменил значение, чтобы не отвлекало
 
-    // function showModalBySCroll(){
-    //     if(window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight){
-    //         openModal();
-    //         window.removeEventListener('scroll', showModalBySCroll);
-    //     }
-    // }
-
-    // if user scroll to the end show modal
-    // window.addEventListener('scroll', showModalBySCroll);
+    function showModalByScroll() {
+        if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+            openModal();
+            window.removeEventListener('scroll', showModalByScroll);
+        }
+    }
+    window.addEventListener('scroll', showModalByScroll);
 
 
     //Using classes for cards
@@ -163,11 +155,11 @@ window.addEventListener('DOMContentLoaded', function() {
             this.classes = classes;
             this.parent = document.querySelector(parentSelector);
             this.transfer = 1.7;
-            this.changeToAZN(); 
+            this.changeToAZN();
         }
 
         changeToAZN() {
-            this.price = Math.round(this.price * this.transfer); 
+            this.price = Math.round(this.price * this.transfer);
         }
 
         render() {
@@ -195,58 +187,70 @@ window.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-        //Function for putting datas from db
-        const getResource = async (url) => {
-            const res = await fetch(url);
+    //Function for putting datas from db
+    const getResource = async (url) => {
+        const res = await fetch(url);
 
-            //Fetch cant catch http server errors(404,500) and for solving this problem we use ok and status methods.
-            if(!res.ok){
-                throw new Error(`Could not fetch ${url}, status: ${res.status}`);
-            }else{
-                //Conver to normal js object
-                return await res.json();
-            }
-        };
+        //Fetch cant catch http server errors(404,500) and for solving this problem we use ok and status methods.
+        if (!res.ok) {
+            throw new Error(`Could not fetch ${url}, status: ${res.status}`);
+        } else {
+            //Conver to normal js object
+            return await res.json();
+        }
+    };
 
-        // getResource('http://localhost:3000/menu')
-        //        .then(data => {
-        //           data.forEach(({img, altimg, title, descr, price}) =>{
-        //               new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
-        //           });
-        //        });
+    getResource('http://localhost:3000/menu')
+        .then(data => {
+            data.forEach(({
+                img,
+                altimg,
+                title,
+                descr,
+                price
+            }) => {
+                new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
+            });
+        });
 
 
-        //Dicamic creating cards from db.json
-        // getResource('http://localhost:3000/menu')
-        // .then(data =>  createCard(data));
+    //Dicamic creating cards from db.json
+    // getResource('http://localhost:3000/menu')
+    // .then(data =>  createCard(data));
 
-        // function createCard(data){
-        //     data.forEach(({img, altimg, title, descr, price}) =>{
-        //         const element = document.createElement('div');
-                
-        //         element.classList.add('menu__item');
+    // function createCard(data){
+    //     data.forEach(({img, altimg, title, descr, price}) =>{
+    //         const element = document.createElement('div');
 
-        //         element.innerHTML = `
-        //             <img src=${img} alt=${altimg}>
-        //             <h3 class="menu__item-subtitle">${title}</h3>
-        //             <div class="menu__item-descr">${descr}</div>
-        //             <div class="menu__item-divider"></div>
-        //             <div class="menu__item-price">
-        //                 <div class="menu__item-cost">Qiymet:</div>
-        //                 <div class="menu__item-total"><span>${price}</span> azn/gün</div>
-        //             </div>
-        //         `;
+    //         element.classList.add('menu__item');
 
-        //         document.querySelector('.menu .container').append(element);
-        //     });
+    //         element.innerHTML = `
+    //             <img src=${img} alt=${altimg}>
+    //             <h3 class="menu__item-subtitle">${title}</h3>
+    //             <div class="menu__item-descr">${descr}</div>
+    //             <div class="menu__item-divider"></div>
+    //             <div class="menu__item-price">
+    //                 <div class="menu__item-cost">Qiymet:</div>
+    //                 <div class="menu__item-total"><span>${price}</span> azn/gün</div>
+    //             </div>
+    //         `;
 
-        // }
+    //         document.querySelector('.menu .container').append(element);
+    //     });
+
+    // }
 
 
     // using axios
     axios.get('http://localhost:3000/menu')
         .then(data => {
-            data.data.forEach(({img, altimg, title, descr, price}) =>{
+            data.data.forEach(({
+                img,
+                altimg,
+                title,
+                descr,
+                price
+            }) => {
                 new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
             });
         });
@@ -275,12 +279,12 @@ window.addEventListener('DOMContentLoaded', function() {
         return await res.json();
     };
 
-    forms.forEach(item =>{
+    forms.forEach(item => {
         bindPostData(item);
     });
 
-    function bindPostData(form){
-        form.addEventListener('submit', (e)=>{
+    function bindPostData(form) {
+        form.addEventListener('submit', (e) => {
             e.preventDefault();
 
             //Put message
@@ -303,22 +307,22 @@ window.addEventListener('DOMContentLoaded', function() {
 
             // Sending datas 
             postData('http://localhost:3000/requests', json)
-            .then(data => {
-                console.log(data);
-                showThanksModal(message.success);
-                statusMessage.remove();
-            })
-            .catch(data =>{
-                showThanksModal(message.failure);
-            })
-            .finally(data => {
-                form.reset();
-            });
+                .then(data => {
+                    console.log(data);
+                    showThanksModal(message.success);
+                    statusMessage.remove();
+                })
+                .catch(data => {
+                    showThanksModal(message.failure);
+                })
+                .finally(data => {
+                    form.reset();
+                });
         });
     }
 
 
-    function showThanksModal(message){
+    function showThanksModal(message) {
         const prevModalDialog = document.querySelector('.modal__dialog');
 
         prevModalDialog.classList.add('hide');
@@ -342,7 +346,68 @@ window.addEventListener('DOMContentLoaded', function() {
         }, 4000);
     }
 
+
+
+    //Slider
+
+    const slides = document.querySelectorAll('.offer__slide'),
+        prev = document.querySelector('.offer__slider-prev'),
+        next = document.querySelector('.offer__slider-next'),
+        total = document.querySelector('#total'),
+        current = document.querySelector('#current');
+
+
+    let slideIndex = 1;
+
+    showSlides(slideIndex);
+
+    function totalSlides(total) {
+        //total slides
+        if (slides.length < 10) {
+            total.textContent = `0${slides.length}`;
+        } else {
+            total.textContent = slides.length;
+        }
+    }
+
+    totalSlides(total);
+
+
+    function showSlides(n) {
+        if (n > slides.length) {
+            slideIndex = 1;
+        }
+
+        if (n < 1) {
+            slideIndex = slides.length;
+        }
+
+        slides.forEach(slider => slider.style.display = 'none');
+
+        slides[slideIndex - 1].style.display = 'block';
+
+        //current slider
+        if (slides.length < 10) {
+            current.textContent = `0${slideIndex}`;
+        } else {
+            current.textContent = slideIndex;
+        }
+
+    }
+
+
+    // Slider Navigation
+    function plusSlides(n) {
+        showSlides(slideIndex += n);
+    }
+
+    prev.addEventListener('click', () => {
+        plusSlides(-1);
+    });
+
+    next.addEventListener('click', () => {
+        plusSlides(1);
+    });
+
+
 });
-
-
-
