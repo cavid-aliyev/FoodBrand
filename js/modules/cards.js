@@ -1,3 +1,5 @@
+import {getResource} from '../services/services';
+
 function cards() {
     //Using classes for cards
     class MenuCard {
@@ -43,17 +45,7 @@ function cards() {
     }
 
     //Function for putting datas from db
-    const getResource = async (url) => {
-        const res = await fetch(url);
 
-        //Fetch cant catch http server errors(404,500) and for solving this problem we use ok and status methods.
-        if (!res.ok) {
-            throw new Error(`Could not fetch ${url}, status: ${res.status}`);
-        } else {
-            //Conver to normal js object
-            return await res.json();
-        }
-    };
 
     getResource('http://localhost:3000/menu')
         .then(data => {
@@ -111,4 +103,4 @@ function cards() {
     //     });
 }
 
-module.exports = cards;
+export default cards;
