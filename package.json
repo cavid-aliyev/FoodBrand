@@ -12,11 +12,24 @@
   },
   "author": "",
   "license": "ISC",
+  "browserslist": [
+    "> 1%"
+  ],
   "bugs": {
     "url": "https://github.com/cavid-aliyev/JSinWork/issues"
   },
   "homepage": "https://github.com/cavid-aliyev/JSinWork#readme",
   "dependencies": {
-    "json-server": "^0.16.3"
+    "@babel/polyfill": "^7.12.1",
+    "es6-promise": "^4.2.8",
+    "json-server": "^0.16.3",
+    "nodelist-foreach-polyfill": "^1.2.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.12.16",
+    "@babel/core": "^7.12.16",
+    "@babel/preset-env": "^7.12.16",
+    "babel-loader": "^8.2.2",
+    "core-js": "^3.8.3"
   }
 }
